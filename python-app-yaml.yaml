@@ -1,0 +1,78 @@
+kind: List
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: python-app-yaml
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: python-app-yaml
+  spec:
+    source:
+      git:
+        uri: https://github.com/bahi1023/openshift-task-apps.git
+      contextDir: python-app
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python:3.9-ubi8
+          namespace: openshift
+    output:
+      to:
+        kind: ImageStreamTag
+        name: python-app-yaml:latest
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: python-app-yaml
+  spec:
+    replicas: 1
+    selector:
+      app: python-app-yaml
+    template:
+      metadata:
+        labels:
+          app: python-app-yaml
+      spec:
+        containers:
+        - name: python-app-yaml
+          image: python-app-yaml
+          ports:
+          - containerPort: 9000
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - python-app-yaml
+        from:
+          kind: ImageStreamTag
+          name: python-app-yaml:latest
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: python-app-yaml
+  spec:
+    selector:
+      app: python-app-yaml
+    ports:
+    - port: 9000
+      targetPort: 9000
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: python-app-yaml
+  spec:
+    to:
+      kind: Service
+      name: python-app-yaml
+    port:
+      targetPort: 9000

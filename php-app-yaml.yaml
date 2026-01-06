@@ -1,0 +1,78 @@
+kind: List
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: php-app-yaml
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: php-app-yaml
+  spec:
+    source:
+      git:
+        uri: https://github.com/bahi1023/openshift-task-apps.git
+      contextDir: php-app
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: php:7.4-ubi8
+          namespace: openshift
+    output:
+      to:
+        kind: ImageStreamTag
+        name: php-app-yaml:latest
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: php-app-yaml
+  spec:
+    replicas: 1
+    selector:
+      app: php-app-yaml
+    template:
+      metadata:
+        labels:
+          app: php-app-yaml
+      spec:
+        containers:
+        - name: php-app-yaml
+          image: php-app-yaml
+          ports:
+          - containerPort: 9000
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - php-app-yaml
+        from:
+          kind: ImageStreamTag
+          name: php-app-yaml:latest
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: php-app-yaml
+  spec:
+    selector:
+      app: php-app-yaml
+    ports:
+    - port: 9000
+      targetPort: 9000
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: php-app-yaml
+  spec:
+    to:
+      kind: Service
+      name: php-app-yaml
+    port:
+      targetPort: 9000

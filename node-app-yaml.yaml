@@ -1,0 +1,78 @@
+kind: List
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: node-app-yaml
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: node-app-yaml
+  spec:
+    source:
+      git:
+        uri: https://github.com/bahi1023/openshift-task-apps.git
+      contextDir: node-app
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nodejs:22-minimal-ubi8
+          namespace: openshift
+    output:
+      to:
+        kind: ImageStreamTag
+        name: node-app-yaml:latest
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: node-app-yaml
+  spec:
+    replicas: 1
+    selector:
+      app: node-app-yaml
+    template:
+      metadata:
+        labels:
+          app: node-app-yaml
+      spec:
+        containers:
+        - name: node-app-yaml
+          image: node-app-yaml
+          ports:
+          - containerPort: 9000
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - node-app-yaml
+        from:
+          kind: ImageStreamTag
+          name: node-app-yaml:latest
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: node-app-yaml
+  spec:
+    selector:
+      app: node-app-yaml
+    ports:
+    - port: 9000
+      targetPort: 9000
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: node-app-yaml
+  spec:
+    to:
+      kind: Service
+      name: node-app-yaml
+    port:
+      targetPort: 9000
