@@ -1,117 +1,99 @@
-<div align="center">
+# 🚀 Simple API Project – OpenShift Multi-Deployment Strategies
 
-# 🚀 Simple API Project
-### OpenShift Multi-Deployment Strategies
+A hands-on DevOps project demonstrating how to deploy the **same simple API** using **multiple OpenShift deployment strategies** across **three different technologies**.
 
-<p>
-  <img src="https://img.shields.io/badge/OpenShift-EE0000?style=for-the-badge&logo=redhatopenshift&logoColor=white" alt="OpenShift" />
-  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" />
-  <img src="https://img.shields.io/badge/Podman-892CA0?style=for-the-badge&logo=podman&logoColor=white" alt="Podman" />
-  <br>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="NodeJS" />
-  <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP" />
-</p>
-
-<p>
-  <b>A hands-on DevOps project demonstrating platform usage, deployment patterns, and container workflows.</b>
-</p>
-
-</div>
+This project focuses on **platform usage, deployment patterns, and container workflows** rather than application complexity.
 
 ---
 
 ## 🧭 Project Overview
 
-The objective of this project is to explore and apply different **OpenShift deployment mechanisms** by deploying a minimal API implemented in three different languages.
+The objective of this project is to explore and apply different **OpenShift deployment mechanisms** by deploying a minimal API implemented in:
 
-Each application exposes the same endpoints and is deployed using **multiple OpenShift approaches** to highlight differences and use cases. OpenShift was used to **build, deploy, and validate** the workloads.
+* 🐍 **Python** (Flask)
+* 🟢 **Node.js** (Express)
+* 🐘 **PHP** (Apache)
 
-> **Note:** This project focuses on infrastructure and deployment logic rather than application complexity.
+Each application exposes the same endpoints and is deployed using **multiple OpenShift approaches** to highlight differences and use cases.
 
----
-
-## 🏗️ Architecture & Tech Stack
-
-### 🧩 The Stack
-| Component | Technology | Description |
-| :--- | :--- | :--- |
-| **Platform** | 🔴 OpenShift Sandbox | The core orchestration platform. |
-| **Runtime** | 📦 Containers (CRI-O) | Application runtime environment. |
-| **Registry** | 🚢 RedHat Quay | External container registry with Robot Accounts. |
-| **Mgmt** | 📜 ImageStreams | OpenShift-native image lifecycle management. |
-| **IaC** | 📄 YAML & Templates | Manifests and reusable deployment templates. |
-
-### 🔐 Security & Runtime Context
-* 🛡️ **Non-Root Execution:** All applications run as non-root users for security compliance.
-* 🚫 **Rootless Containers:** The root user is explicitly restricted from running containers.
-* 🔒 **SCC Enforcement:** Security Context Constraints (SCC) are actively enforced by OpenShift.
-* 🌐 **Networking:** Platform-managed routing handles ingress traffic.
+OpenShift was used to **build, deploy, and validate** the workloads, while this GitHub repository contains the **source code and manifests** representing those deployments.
 
 ---
 
 ## 🔌 API Endpoints
 
-All three microservices (Python, Node.js, PHP) expose the exact same REST endpoints:
+Each application exposes the following endpoints:
 
-| Method | Endpoint | Description | Usage |
-| :---: | :--- | :--- | :--- |
-| `GET` | `/health` | **Health Check** | Used for Liveness & Readiness probes. |
-| `GET` | `/message` | **Static Content** | Returns a simple JSON verification message. |
-| `GET` | `/date` | **Dynamic Content** | Returns the current server timestamp. |
+| Endpoint | Description |
+| :--- | :--- |
+| `/health` | Health check endpoint |
+| `/message` | Returns a static message |
+| `/date` | Returns current date and time |
 
 ---
 
-## 🚀 Deployment Strategies
+## 🏗️ Architecture Overview
 
-I implemented **four distinct strategies** to deploy the same workload, demonstrating the versatility of OpenShift:
+* ☸️ **OpenShift Sandbox** – Application platform
+* 📦 **Containers** – Application runtime
+* 🔄 **ImageStreams** – Image lifecycle management
+* 📄 **YAML Manifests** – Raw Kubernetes/OpenShift deployments
+* 📋 **OpenShift Templates** – Reusable deployment templates
+* 🐳 **Dockerfile** – Manual image build workflow
+* 🚢 **RedHat Quay** – External container registry
+* 🐙 **GitHub** – Source code & manifest repository
+
+---
+
+## 🔐 Security & Runtime Notes
+
+* Applications run as **non-root users**
+* Root user is **not responsible for running the containers**
+* Security Context Constraints (SCC) are enforced by OpenShift
+* Platform-managed networking and routing is used
+
+---
+
+## 🚀 Deployment Strategies Implemented
+
+The same API was deployed using **four different OpenShift strategies**:
 
 ### 1️⃣ Source-to-Image (S2I)
-> *The "Native" Way*
-* **Workflow:** OpenShift pulls source code directly from GitHub and builds a container image automatically.
-* **Command:** `oc new-app https://github.com/...`
+* OpenShift builds the image directly from source code
+* Deployed using `oc new-app`
 
 ### 2️⃣ Deployment Using YAML
-> *The "Declarative" Way*
-* **Workflow:** Manual application of standard Kubernetes/OpenShift manifests.
-* **Resources:** Explicitly defined `Deployment`, `Service`, and `Route` objects.
-* **Features:** Custom-configured Liveness & Readiness probes in the YAML.
+* Manual Kubernetes/OpenShift manifests
+* **Includes:**
+  * Deployment
+  * Service
+  * Route
+* Liveness & readiness probes configured
 
 ### 3️⃣ OpenShift Templates
-> *The "Reusable" Way*
-* **Workflow:** A parameterized template acts as a blueprint.
-* **Benefit:** Allows for repeated deployments (e.g., dev, test, prod) with single-command instantiation using different parameters.
+* Reusable templates bundling multiple resources
+* Simplifies repeated deployments
 
-### 4️⃣ ImageStream + `oc new-app`
-> *The "Image-Centric" Way*
-* **Workflow:** Separation of Build and Deploy.
-* **Details:** Images are managed via **ImageStreams**; deployments track these streams and update automatically when a new image tag is detected.
+### 4️⃣ ImageStream + oc new-app
+* Images managed via OpenShift ImageStreams
+* Deployments created from ImageStreams using `oc new-app`
 
 ---
 
 ## 🐳 Docker & RedHat Quay Integration
 
-To simulate a real-world supply chain, I integrated an external registry:
+* A **Dockerfile** was written manually
+* OpenShift Docker strategy build was used
+* Images were built by OpenShift
+* Images were **pushed to RedHat Quay**
+* Authentication handled using a **Quay Robot Account**
 
-1.  **Manual Dockerfile:** Wrote a custom `Dockerfile` optimized for OpenShift (non-root).
-2.  **Docker Strategy Build:** Configured OpenShift to build the image using the Dockerfile.
-3.  **Push to Registry:** The build process pushes the final artifact to **RedHat Quay**.
-4.  **Authentication:** Secure access handled via **Quay Robot Accounts** and OpenShift pull secrets.
-
-**✅ Key Learnings:**
-* Managing external registry secrets.
-* Bridging the gap between manual Docker workflows and OpenShift automation.
+This demonstrates:
+* OpenShift-managed builds
+* Manual Dockerfile workflows
+* External registry integration
 
 ---
 
-## 📂 Repository Structure
 
-```text
-├── 📁 manifests/             # Raw YAML Deployment, Service, and Route files
-├── 📁 templates/             # OpenShift Templates (.yaml)
-├── 📁 src/
-│   ├── 🐍 python-flask/      # Source code for Python API
-│   ├── 🟢 node-express/      # Source code for Node.js API
-│   └── 🐘 php-apache/        # Source code for PHP API
-├── 🐳 Dockerfile             # Manual Dockerfile for Quay integration
-└── 📄 README.md              # Project documentation
+* 🟢 **Node.js**
