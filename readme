@@ -1,0 +1,99 @@
+# 🚀 Simple API Project – OpenShift Multi-Deployment Strategies
+
+A hands-on DevOps project demonstrating how to deploy the **same simple API** using **multiple OpenShift deployment strategies** across **three different technologies**.
+
+This project focuses on **OpenShift platform usage, deployment patterns, and container workflows** rather than application complexity.
+
+---
+
+## 🧭 Project Overview
+
+The objective of this project is to explore and apply different **OpenShift deployment mechanisms** by deploying a minimal API implemented in three popular runtimes:
+
+* 🐍 **Python** (Flask)
+* 🟢 **Node.js** (Express)
+* 🐘 **PHP** (Apache)
+
+Each application exposes the exact same endpoints but is deployed using **different OpenShift approaches** to highlight specific use cases and configurations.
+
+OpenShift was used to **build, deploy, and validate** the workloads. This repository contains the source code for the APIs and the manifests/templates used for the deployments.
+
+---
+
+## 🔌 API Endpoints
+
+Regardless of the language used (Node.js, Python, or PHP), each application exposes the following standard endpoints:
+
+| Endpoint | Description |
+| :--- | :--- |
+| `/health` | **Health Check:** Returns a status indicating the app is running (used for OpenShift Probes). |
+| `/message` | **Echo/Static Message:** Returns a simple greeting or echoes the input. |
+| `/date` | **Time Check:** Returns the current date and time on the server. |
+
+---
+
+## 🛠️ Deployment Strategies Covered
+
+For each of the three applications (Node.js, Python, PHP), the following deployment methods were implemented on the **OpenShift Sandbox**:
+
+1.  **OC New App (S2I):**
+    * Using Source-to-Image (S2I) to build and deploy directly from source code.
+    * Demonstrates OpenShift's ability to auto-detect languages and build container images without a Dockerfile.
+
+2.  **YAML Manifests:**
+    * Deploying using standard Kubernetes/OpenShift YAML resource definitions.
+    * Manual configuration of `Deployment`, `Service`, and `Route` objects for fine-grained control.
+
+3.  **OpenShift Templates:**
+    * Creating reusable `Template` objects with parameters (e.g., `APP_NAME`, `PORT`, `GIT_REPO`).
+    * Allows for rapid instantiation of multiple environments or app versions from a single definition.
+
+4.  **Image Streams:**
+    * Managing container images using OpenShift `ImageStreams`.
+    * Demonstrates decoupling the deployment from the external registry (Quay.io) and enabling automatic rollouts when image tags update.
+
+---
+
+## ⚙️ Technical Requirements & Constraints
+
+* **Non-Root Execution:** All containers run as non-root users for security compliance.
+* **Port:** All applications are configured to run on internal port `9000` (or mapped appropriately).
+* **Probes:** Readiness and Liveness probes are configured to monitor the `/health` endpoint.
+* **Registry:** Images are pushed to and pulled from **Red Hat Quay**.
+
+---
+
+## 🚀 How to Run
+
+### Prerequisites
+* Access to an OpenShift Cluster (e.g., Developer Sandbox).
+* `oc` CLI tool installed.
+
+### Quick Start (Template Method)
+To deploy one of the apps using the provided template:
+
+1.  **Create the Template:**
+    ```bash
+    oc create -f templates/api-s2i-template.yaml
+    ```
+
+2.  **Process & Deploy (Example: Node.js):**
+    ```bash
+    oc process api-s2i-template \
+      -p APP_NAME=node-app \
+      -p GIT_REPO=[https://github.com/YOUR_USERNAME/YOUR_REPO_NAME](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME) \
+      -p CONTEXT_DIR=node-app \
+      -p BUILDER_IMAGE=nodejs:16-ubi8 \
+      | oc create -f -
+    ```
+
+---
+
+## 📂 Repository Structure
+
+```text
+├── node-app/          # Source code for Node.js Express API
+├── php-app/           # Source code for PHP Apache API
+├── python-app/        # Source code for Python Flask API
+├── manifests/         # YAML files for manual deployment
+└── templates/         # OpenShift Templates (s2i.template.yaml)
