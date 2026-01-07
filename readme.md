@@ -102,10 +102,10 @@ The following screenshots validate the successful deployment and routing of the 
 ### 🟢 Node.js API
 ![Node.js Validation 1](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(2).jpeg?raw=true)
 ![Node.js Validation 2](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(3).jpeg?raw=true)
-
+![Node.js Date Endpoint](https://github.com/bahi1023/openshift-task-apps/blob/d73b570ba0e8087f4fb407e3fab42b6e532b4a87/date-node.jpeg?raw=true)
 ### 🐍 Python API
 ![Python Validation 1](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(4).jpeg?raw=true)
 ![Python Validation 2](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM.jpeg?raw=true)
-
+![Python Date Endpoint](https://github.com/bahi1023/openshift-task-apps/blob/d73b570ba0e8087f4fb407e3fab42b6e532b4a87/date-py.jpeg?raw=true)
 ### 🐘 PHP API
 ![PHP Validation](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(6).jpeg?raw=true)
