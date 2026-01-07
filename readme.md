@@ -1,4 +1,4 @@
-# 🚀 Simple API Project – OpenShift Multi-Deployment Strategies
+ # 🚀 Simple API Project – OpenShift Multi-Deployment Strategies
 
 A hands-on DevOps project demonstrating how to deploy the **same simple API** using **multiple OpenShift deployment strategies** across **three different technologies**.
 
@@ -93,5 +93,19 @@ This demonstrates:
 * Manual Dockerfile workflows
 * External registry integration
 
-* 🟢 **Node.js**
+---
 
+## 📸 Live Validation Screenshots
+
+The following screenshots validate the successful deployment and routing of the services on OpenShift.
+
+### 🟢 Node.js API
+![Node.js Validation 1](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(2).jpeg?raw=true)
+![Node.js Validation 2](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(3).jpeg?raw=true)
+
+### 🐍 Python API
+![Python Validation 1](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(4).jpeg?raw=true)
+![Python Validation 2](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM.jpeg?raw=true)
+
+### 🐘 PHP API
+![PHP Validation](https://github.com/bahi1023/openshift-task-apps/blob/5c42d5f41092fd24b8448435ad475ccd6961e668/WhatsApp%20Image%202026-01-07%20at%209.39.50%20PM%20(6).jpeg?raw=true)
