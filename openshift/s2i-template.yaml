@@ -1,0 +1,109 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: api-s2i-template
+  annotations:
+    description: "Template to Build AND Deploy API applications from Source (S2I)"
+    tags: "api,nodejs,php,python,s2i"
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: "${APP_NAME}"
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: "${APP_NAME}"
+  spec:
+    source:
+      git:
+        uri: "${GIT_REPO}"
+      contextDir: "${CONTEXT_DIR}"
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: "${BUILDER_IMAGE}"
+          namespace: openshift
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${APP_NAME}:latest"
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: "${APP_NAME}"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "${APP_NAME}"
+    template:
+      metadata:
+        labels:
+          app: "${APP_NAME}"
+      spec:
+        containers:
+        - name: "${APP_NAME}"
+          image: "image-registry.openshift-image-registry.svc:5000/${NAMESPACE}/${APP_NAME}:latest"
+          ports:
+          - containerPort: ${PORT}
+          env:
+          - name: PORT
+            value: "${PORT}"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: ${PORT}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: ${PORT}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: "${APP_NAME}"
+  spec:
+    ports:
+    - port: ${PORT}
+      targetPort: ${PORT}
+      protocol: TCP
+    selector:
+      app: "${APP_NAME}"
+
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: "${APP_NAME}"
+  spec:
+    to:
+      kind: Service
+      name: "${APP_NAME}"
+    port:
+      targetPort: ${PORT}
+
+parameters:
+- name: APP_NAME
+  required: true
+- name: GIT_REPO
+  required: true
+  value: "https://github.com/bahi1023/openshift-task-apps"
+- name: CONTEXT_DIR
+  required: true
+- name: BUILDER_IMAGE
+  description: "e.g. python:3.9, nodejs:16, php:7.4"
+  required: true
+- name: NAMESPACE
+  description: "Your OpenShift Project Name"
+  required: true
+- name: PORT
+  description: "Port the application listens on (Python/Node=9000, PHP=8080)"
+  required: true
+  value: "9000"
